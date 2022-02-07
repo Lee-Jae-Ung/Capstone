@@ -18,8 +18,9 @@ public class Task extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... strings) {
         URL url = null;
+
         try{
-            url = new URL("http://175.215.251.220:50001/manage/Status/info");
+            url = new URL(strings[0]);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             if(conn.getResponseCode() == conn.HTTP_OK){
