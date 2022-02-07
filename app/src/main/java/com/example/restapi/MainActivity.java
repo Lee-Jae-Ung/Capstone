@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -22,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -29,10 +31,35 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
     private LineChart chart;
     private Thread thread;
+
+    public String[] Ch1;
+
+    ArrayList<Entry> entry_chart = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /*
+        linechart = (LineChart) findViewById(R.id.chart);
+        LineData chartData = new LineData();
+
+        int w;
+        float z=0;
+        for(w=0;w<Ch1.length;w++){
+            entry_chart.add(new Entry(z,Float.parseFloat(Ch1[w])));
+            z++;
+        }
+
+
+        LineDataSet lineDataSet = new LineDataSet(entry_chart,"line1");
+        chartData.addDataSet(lineDataSet);
+
+        linechart.setData(chartData);
+        linechart.invalidate();
+
+         */
 
         chart = (LineChart) findViewById(R.id.chart);
 
@@ -47,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         chart.setData(data);
 
         feedMultiple();
+
+
         //TextView textview = (TextView)findViewById(R.id.result1);
         //String resultText = "[NULL]";
 
@@ -143,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
  */
+
     private void addEntry() {
         LineData data = chart.getData();
         if (data != null) {
@@ -151,7 +181,18 @@ public class MainActivity extends AppCompatActivity {
                 set = createSet();
                 data.addDataSet(set);
             }
+            float z=0;
             data.addEntry(new Entry(set.getEntryCount(), (float) (Math.random() * 40) + 30f), 0);
+/*
+            int w;
+            for(w=0;w<Ch1.length;w++){
+                data.addEntry(new Entry(z,Float.parseFloat(Ch1[w])),0);
+                z++;
+            }
+*/
+
+            //data.addEntry(new Entry(z, Float.parseFloat(Ch1[w])), 0);
+
             data.notifyDataChanged();
             chart.notifyDataSetChanged();
             chart.setVisibleXRangeMaximum(10);
@@ -258,15 +299,19 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    String[] Ch1 = resultText.replace("Ch1", "").split(",");
+                    Ch1 = resultText.replace("Ch1", "").split(",");
 
-                    double[] nums = Arrays.stream(Ch1).mapToDouble(Double::parseDouble).toArray();
+                    //nums = Arrays.stream(Ch1).mapToDouble(Double::parseDouble).toArray();
 
+
+
+
+                    //ArrayList<BarEntry> barEntries = new ArrayList<BarEntry>();
 
                     // textview.setText(nums[0]);
 
-                    Log.v("button", "2 : " + nums[0]);
-                    Log.v("button", "2 : " + (nums[0] + 10));
+                    //Log.v("button", "2 : " + nums[0]);
+                    //Log.v("button", "2 : " + (nums[0] + 10));
                     try {
                         TimeUnit.SECONDS.sleep(1);
                     } catch (InterruptedException e) {
