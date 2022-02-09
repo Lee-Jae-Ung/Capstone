@@ -2,27 +2,40 @@ package com.example.restapi;
 
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.IPieDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +48,8 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     public LineChart chart;
+    public PieChart pieChart;
+    public PieChart pieChart2;
 
     public float i=0;
     ArrayList<Entry> entry_chart = new ArrayList<>();
@@ -43,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
     Handler mHandler = null;
 
     String Ch1[];
+
+    double cpu = 0.0;
+    double ram_total = 0.0;
+    double ram_usage = 0.0;
+    double ram_usage_per = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +73,147 @@ public class MainActivity extends AppCompatActivity {
 
         mHandler = new Handler();
         chart = (LineChart) findViewById(R.id.chart);
+        pieChart = (PieChart)findViewById(R.id.chart2);
+        pieChart2 = (PieChart)findViewById(R.id.chart3);
 
 
+
+        //원차트1
+/*
+        pieChart.setUsePercentValues(true);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setExtraOffsets(5,10,5,5);
+
+        pieChart.setDragDecelerationFrictionCoef(0.95f);
+
+        pieChart.setDrawHoleEnabled(false);
+        pieChart.setHoleColor(Color.WHITE);
+        pieChart.setTransparentCircleRadius(61f);
+
+
+        ArrayList yValues = new ArrayList();
+
+        yValues.add(new PieEntry(30f,"USAGE"));
+        yValues.add(new PieEntry(70f,"REMAIN"));
+
+
+        Description description = new Description();
+        description.setText("CPU"); //라벨
+        description.setTextSize(15);
+        pieChart.setDescription(description);
+
+        pieChart.animateY(1000, Easing.EasingOption.EaseInOutCubic);
+
+
+        PieData data1 = new PieData();
+        PieDataSet dataSet = new PieDataSet(yValues,"Usage");
+
+
+        dataSet.setSliceSpace(3f);
+        dataSet.setSelectionShift(5f);
+        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+
+
+        data1.addDataSet(dataSet);
+        data1.setValueTextSize(10f);
+        data1.setValueTextColor(Color.YELLOW);
+
+        pieChart.setData(data1);
+
+
+        pieChart.invalidate();
+*/
+
+        //원차트2
+/*
+        //원차트2
+        pieChart2.setUsePercentValues(true);
+        pieChart2.getDescription().setEnabled(false);
+        pieChart2.setExtraOffsets(5,10,5,5);
+
+        pieChart2.setDragDecelerationFrictionCoef(0.95f);
+
+        pieChart2.setDrawHoleEnabled(false);
+        pieChart2.setHoleColor(Color.WHITE);
+        pieChart2.setTransparentCircleRadius(61f);
+
+
+
+        ArrayList yValues2 = new ArrayList();
+
+        yValues2.add(new PieEntry((float)cpu,"USAGE"));
+        yValues2.add(new PieEntry((float)(100-cpu),"REMAIN"));
+
+
+        Description description2 = new Description();
+        description2.setText("RAM"); //라벨
+        description2.setTextSize(15);
+        pieChart2.setDescription(description2);
+
+        pieChart2.animateY(1000, Easing.EasingOption.EaseInOutCubic);
+
+
+
+        PieData data2 = new PieData();
+        PieDataSet dataSet2 = new PieDataSet(yValues2,"Usage");
+        data2.addDataSet(dataSet);
+
+
+
+
+        dataSet2.setSliceSpace(3f);
+        dataSet2.setSelectionShift(5f);
+        dataSet2.setColors(ColorTemplate.JOYFUL_COLORS);
+
+
+
+        //PieData data = new PieData();
+
+
+        data2.setValueTextSize(10f);
+        data2.setValueTextColor(Color.YELLOW);
+
+        pieChart2.setData(data2);
+        pieChart2.invalidate();
+*/
+
+
+/*
+        Thread t1 = new Thread(new Runnable() {
+            String resultText1 = "[NULL]";
+            @Override
+            public void run() {
+                try {
+                    resultText1 = new Task().execute("http://203.250.77.238:50001/manage/Status/info").get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+
+                try {
+                    JSONObject jsonObject = new JSONObject(resultText1);
+                    cpu = Double.parseDouble(jsonObject.getString("cpu").replace("%", ""));
+                    ram_total = Double.parseDouble(jsonObject.getString("ram_total").replace("MB", ""));
+                    ram_usage = Double.parseDouble(jsonObject.getString("ram_usage").replace("MB", ""));
+                    ram_usage_total = Double.parseDouble(jsonObject.getString("ram_usage_total").replace("%", ""));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+*/
 
 
         Thread t = new Thread(new Runnable() {
-            TextView textview = (TextView) findViewById(R.id.result1);
+            //TextView textview = (TextView) findViewById(R.id.result1);
             String resultText = "[NULL]";
             //String Ch1[];
 
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void run() {
                 while(true) {
@@ -75,16 +227,20 @@ public class MainActivity extends AppCompatActivity {
 
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+
                     } catch (ExecutionException e) {
                         e.printStackTrace();
+
                     }
 
                     Ch1 = resultText.replace("Ch1", "").split(",");
-
+                    double[] nums;
+                    nums = Arrays.stream(Ch1).mapToDouble(Double::parseDouble).toArray();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            addEntry(Double.parseDouble(Ch1[0]));
+
+                            addEntry(nums);
                         }
                     });
 
@@ -144,8 +300,6 @@ public class MainActivity extends AppCompatActivity {
 
 // don't forget to refresh the drawing
         chart.invalidate();
-
-
 
 /*
         chart = (LineChart) findViewById(R.id.chart);
@@ -208,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
         //thread1.start();
     }
 
-    private void addEntry(double num) {
+    private void addEntry(double[] num) {
 
         LineData data = chart.getData();
 
@@ -225,19 +379,24 @@ public class MainActivity extends AppCompatActivity {
             data.addDataSet(set);
         }
 
+        int i;
+        for(i=0;i<num.length;i++){
+            data.addEntry(new Entry((float)i, (float)num[i]), 0);
+        }
 
-
-        data.addEntry(new Entry((float)set.getEntryCount(), (float)num), 0);
+        //data.addEntry(new Entry((float)set.getEntryCount(), (float)num), 0);
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
         chart.notifyDataSetChanged();
 
-        chart.setVisibleXRangeMaximum(150);
+        chart.setVisibleXRangeMaximum(5120);
         // this automatically refreshes the chart (calls invalidate())
         chart.moveViewTo(data.getEntryCount(), 50f, YAxis.AxisDependency.LEFT);
 
     }
+
+
 
     private LineDataSet createSet() {
 
@@ -255,7 +414,196 @@ public class MainActivity extends AppCompatActivity {
         return set;
     }
 
+    private void addPieEntry(double stat){
+        PieData data = pieChart.getData();
 
+        if (data == null) {
+            data = new PieData();
+            pieChart.setData(data);
+        }
+
+        IPieDataSet set = data.getDataSetByIndex(0);
+        // set.addEntry(...); // can be called as well
+
+        if (set == null) {
+            set = createPieSet();
+            data.addDataSet(set);
+        }
+
+
+
+        ArrayList yValues = new ArrayList();
+        yValues.add(new PieEntry((float)stat,"USAGE"));
+        yValues.add(new PieEntry((float)(100-stat),"AVAILABLE"));
+
+
+        PieDataSet dataSet = new PieDataSet(yValues,"Usage");
+        dataSet.setSliceSpace(3f);
+        dataSet.setSelectionShift(5f);
+        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+
+        data.addDataSet(dataSet);
+        data.setValueTextSize(10f);
+        data.setValueTextColor(Color.YELLOW);
+
+        //data.addEntry(new PieEntry((float)stat, "USAGE"), 0);
+        //data.addEntry(new PieEntry((float)(100-stat), "AVALIABLE"), 0);
+
+
+
+        //data.addEntry(new Entry((float)set.getEntryCount(), (float)num), 0);
+        data.notifyDataChanged();
+
+        // let the chart know it's data has changed
+        pieChart.notifyDataSetChanged();
+
+    }
+
+    private PieDataSet createPieSet(){
+        PieDataSet dataSet = new PieDataSet(null,"Usage");
+
+
+        dataSet.setSliceSpace(3f);
+        dataSet.setSelectionShift(5f);
+        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+
+        return dataSet;
+    }
+
+
+    public void mOnClick(View v){
+        switch (v.getId()){
+            case R.id.button1:
+
+                new Thread(new Runnable() {
+                    String resultText1 = "[NULL]";
+                    @Override
+                    public void run() {
+                        try {
+                            resultText1 = new Task().execute("http://203.250.77.238:50001/manage/Status/info").get();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(resultText1);
+                            cpu = Double.parseDouble(jsonObject.getString("cpu").replace("%", ""));
+                            ram_total = Double.parseDouble(jsonObject.getString("ram_total").replace("MB", ""));
+                            ram_usage = Double.parseDouble(jsonObject.getString("ram_usage").replace("MB", ""));
+                            ram_usage_per = Double.parseDouble(jsonObject.getString("ram_usage_per").replace("%", ""));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Log.v("RAM","msg : "+ram_usage_per);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                //원차트1
+
+                                pieChart.setUsePercentValues(true);
+                                pieChart.getDescription().setEnabled(false);
+                                pieChart.setExtraOffsets(5,10,5,5);
+
+                                pieChart.setDragDecelerationFrictionCoef(0.95f);
+
+                                pieChart.setDrawHoleEnabled(false);
+                                pieChart.setHoleColor(Color.WHITE);
+                                pieChart.setTransparentCircleRadius(61f);
+
+
+                                ArrayList yValues = new ArrayList();
+
+                                yValues.add(new PieEntry((float)cpu,"USAGE"));
+                                yValues.add(new PieEntry((float)(100-cpu),"AVAILABLE"));
+
+
+                                Description description = new Description();
+                                description.setText("CPU"); //라벨
+                                description.setTextSize(5);
+                                pieChart.setDescription(description);
+
+                                pieChart.animateY(1000, Easing.EasingOption.EaseInOutCubic);
+
+
+                                PieData data1 = new PieData();
+                                PieDataSet dataSet = new PieDataSet(yValues,"%");
+
+
+                                dataSet.setSliceSpace(3f);
+                                dataSet.setSelectionShift(5f);
+                                dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+
+
+                                data1.addDataSet(dataSet);
+                                data1.setValueTextSize(10f);
+                                data1.setValueTextColor(Color.YELLOW);
+
+                                pieChart.setData(data1);
+
+
+                                pieChart.invalidate();
+
+
+                                //******원차트2******
+                                pieChart2.setUsePercentValues(true);
+                                pieChart2.getDescription().setEnabled(false);
+                                pieChart2.setExtraOffsets(5,10,5,5);
+
+                                pieChart2.setDragDecelerationFrictionCoef(0.95f);
+
+                                pieChart2.setDrawHoleEnabled(false);
+                                pieChart2.setHoleColor(Color.WHITE);
+                                pieChart2.setTransparentCircleRadius(61f);
+
+
+
+                                ArrayList yValues2 = new ArrayList();
+
+                                yValues2.add(new PieEntry((float)ram_usage_per,"USAGE"));
+                                yValues2.add(new PieEntry((float)(100-ram_usage_per),"AVAILABLE"));
+
+
+                                Description description2 = new Description();
+                                description2.setText("RAM"); //라벨
+                                description2.setTextSize(5);
+                                pieChart2.setDescription(description2);
+
+                                pieChart2.animateY(1000, Easing.EasingOption.EaseInOutCubic);
+
+
+
+                                PieData data2 = new PieData();
+                                PieDataSet dataSet2 = new PieDataSet(yValues2,"%");
+                                data2.addDataSet(dataSet2);
+
+
+
+
+                                dataSet2.setSliceSpace(3f);
+                                dataSet2.setSelectionShift(5f);
+                                dataSet2.setColors(ColorTemplate.JOYFUL_COLORS);
+
+
+
+                                //PieData data = new PieData();
+
+
+                                data2.setValueTextSize(10f);
+                                data2.setValueTextColor(Color.YELLOW);
+
+                                pieChart2.setData(data2);
+                                pieChart2.invalidate();
+                            }
+                        });
+
+                    }
+                }).start();
+        }
+    }
 
 /*
     private class ExThread extends Thread {

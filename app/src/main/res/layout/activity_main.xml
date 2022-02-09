@@ -3,40 +3,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:text="status"
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="mOnClick"/>
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/chart2"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:layout_weight="1" />
 
-    <Button
-        android:text="getdata"
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="mOnClick"/>
-    <Button
-        android:text="TEST"
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="mOnClick"/>
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/chart3"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:layout_weight="1" />
 
-    <TextView
-        android:id="@+id/result1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="aaaaaaaaa" />
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="update"
+            android:onClick="mOnClick"/>
+    </LinearLayout>
+
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="583dp" />
+
 </LinearLayout>
