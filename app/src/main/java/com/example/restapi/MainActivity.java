@@ -290,9 +290,9 @@ public class MainActivity extends AppCompatActivity {
 //Y축
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setEnabled(true);
-        leftAxis.setTextColor(getResources().getColor(R.color.purple_200));
+        leftAxis.setTextColor(getResources().getColor(R.color.white));
         leftAxis.setDrawGridLines(true);
-        leftAxis.setGridColor(getResources().getColor(R.color.purple_200));
+        leftAxis.setGridColor(getResources().getColor(R.color.white));
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
@@ -406,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
         set.setLineWidth(1f);
         set.setDrawValues(false);
         set.setValueTextColor(getResources().getColor(R.color.white));
-        set.setColor(getResources().getColor(R.color.white));
+        set.setColor(getResources().getColor(R.color.green));
         set.setMode(LineDataSet.Mode.LINEAR);
         set.setDrawCircles(false);
         set.setHighLightColor(Color.rgb(190, 190, 190));
@@ -414,61 +414,7 @@ public class MainActivity extends AppCompatActivity {
         return set;
     }
 
-    private void addPieEntry(double stat){
-        PieData data = pieChart.getData();
 
-        if (data == null) {
-            data = new PieData();
-            pieChart.setData(data);
-        }
-
-        IPieDataSet set = data.getDataSetByIndex(0);
-        // set.addEntry(...); // can be called as well
-
-        if (set == null) {
-            set = createPieSet();
-            data.addDataSet(set);
-        }
-
-
-
-        ArrayList yValues = new ArrayList();
-        yValues.add(new PieEntry((float)stat,"USAGE"));
-        yValues.add(new PieEntry((float)(100-stat),"AVAILABLE"));
-
-
-        PieDataSet dataSet = new PieDataSet(yValues,"Usage");
-        dataSet.setSliceSpace(3f);
-        dataSet.setSelectionShift(5f);
-        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-
-        data.addDataSet(dataSet);
-        data.setValueTextSize(10f);
-        data.setValueTextColor(Color.YELLOW);
-
-        //data.addEntry(new PieEntry((float)stat, "USAGE"), 0);
-        //data.addEntry(new PieEntry((float)(100-stat), "AVALIABLE"), 0);
-
-
-
-        //data.addEntry(new Entry((float)set.getEntryCount(), (float)num), 0);
-        data.notifyDataChanged();
-
-        // let the chart know it's data has changed
-        pieChart.notifyDataSetChanged();
-
-    }
-
-    private PieDataSet createPieSet(){
-        PieDataSet dataSet = new PieDataSet(null,"Usage");
-
-
-        dataSet.setSliceSpace(3f);
-        dataSet.setSelectionShift(5f);
-        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-
-        return dataSet;
-    }
 
 
     public void mOnClick(View v){
