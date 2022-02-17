@@ -4,7 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/user/android/Android_REST/app/src/main/res/layout/activity_join.xml" value="0.1778115501519757" />
-        <entry key="..\:/Users/user/android/Android_REST/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/user/android/Android_REST/app/src/main/res/layout/activity_login.xml" value="0.24010416666666667" />
+        <entry key="..\:/Users/user/android/Android_REST/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/user/android/Android_REST/app/src/main/res/layout/notification.xml" value="0.1875" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
       </map>
     </option>

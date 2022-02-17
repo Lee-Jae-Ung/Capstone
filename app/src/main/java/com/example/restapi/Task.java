@@ -33,10 +33,13 @@ public class Task extends AsyncTask<String, Void, String> {
                 receiveMsg = buffer.toString();
                 Log.i("receiveMsg : ",receiveMsg);
 
+                conn.disconnect();
+                tmp.close();
                 reader.close();
+
             }
             else{
-                Log.i("결과",conn.getResponseCode() + "Error");
+                Log.i("result",conn.getResponseCode() + "Error");
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
