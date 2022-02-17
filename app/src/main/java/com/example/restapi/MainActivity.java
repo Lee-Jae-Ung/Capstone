@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.v("avg","avg : "+avg);
 
                     //푸시알림
-                    if(avg>0.0035){
+                    if(avg>0.004){
 
                         NotificationManager notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -297,8 +297,8 @@ public class MainActivity extends AppCompatActivity {
 
                         //상태바를 드래그하여 아래로 내리면 보이는
                         //알림창(확장 상태바)의 설정
-                        builder.setContentTitle("Title");//알림창 제목
-                        builder.setContentText("Messages....");//알림창 내용
+                        builder.setContentTitle("*이상신호*");//알림창 제목
+                        builder.setContentText("이상신호감지");//알림창 내용
                         //알림창의 큰 이미지
                         Bitmap bm= BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher_background);
                         builder.setLargeIcon(bm);//매개변수가 Bitmap을 줘야한다.
