@@ -43,36 +43,26 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     public LineChart chart;
-    public LineChart chart4;
     public PieChart pieChart;
     public PieChart pieChart2;
 
     public float i=0;
+    ArrayList<Entry> entry_chart = new ArrayList<>();
 
 
     Handler mHandler = null;
-    Handler mHandler2 = null;
+
+    String Ch1[];
 
     double cpu = 0.0;
     double ram_total = 0.0;
     double ram_usage = 0.0;
     double ram_usage_per = 0.0;
-
-    double avg = 0.0;
-    double std = 0.0;
-    double max = 0.0;
-    double min = 0.0;
-
-    //double[] avg_arr = new double[10];
-
-    int p=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,11 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         mHandler = new Handler();
-        mHandler2 = new Handler();
-
         chart = (LineChart) findViewById(R.id.chart);
-        chart4 = (LineChart) findViewById(R.id.chart4);
-
         pieChart = (PieChart)findViewById(R.id.chart2);
         pieChart2 = (PieChart)findViewById(R.id.chart3);
 
@@ -220,6 +206,48 @@ public class MainActivity extends AppCompatActivity {
         });
 
 */
+
+
+        Thread t = new Thread(new Runnable() {
+            //TextView textview = (TextView) findViewById(R.id.result1);
+            String resultText = "[NULL]";
+            //String Ch1[];
+
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void run() {
+                while(true) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        resultText = new Task().execute("http://203.250.77.238:50001/manage/Status/RawData.csv").get();
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+
+                    }
+
+                    Ch1 = resultText.replace("Ch1", "").split(",");
+                    double[] nums;
+                    nums = Arrays.stream(Ch1).mapToDouble(Double::parseDouble).toArray();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            addEntry(nums);
+                        }
+                    });
+
+                }
+            }
+        });
+        t.start();
         chart.setDrawGridBackground(true);
         chart.setBackgroundColor(getResources().getColor(R.color.black));
         chart.setGridBackgroundColor(R.color.black);
@@ -228,9 +256,9 @@ public class MainActivity extends AppCompatActivity {
         chart.getDescription().setEnabled(true);
         Description des = chart.getDescription();
         des.setEnabled(true);
-        des.setText("AVERAGE");
+        des.setText("Real-Time DATA");
         des.setTextSize(15f);
-        des.setTextColor(R.color.green);
+        des.setTextColor(R.color.white);
 
 // touch gestures (false-비활성화)
         chart.setTouchEnabled(false);
@@ -270,121 +298,8 @@ public class MainActivity extends AppCompatActivity {
         rightAxis.setEnabled(false);
 
 
-        Log.v("testdata1","chart invalidate");
 // don't forget to refresh the drawing
         chart.invalidate();
-
-
-//차트4
-        chart4.setDrawGridBackground(true);
-        chart4.setBackgroundColor(getResources().getColor(R.color.black));
-        chart4.setGridBackgroundColor(R.color.black);
-
-// description text
-        chart4.getDescription().setEnabled(true);
-        Description des1 = chart4.getDescription();
-        des1.setEnabled(true);
-        des1.setText("STD");
-        des1.setTextSize(30f);
-        des1.setTextColor(R.color.green);
-
-// touch gestures (false-비활성화)
-        chart4.setTouchEnabled(false);
-
-// scaling and dragging (false-비활성화)
-        chart4.setDragEnabled(false);
-        chart4.setScaleEnabled(false);
-
-//auto scale
-        chart4.setAutoScaleMinMaxEnabled(true);
-
-// if disabled, scaling can be done on x- and y-axis separately
-        chart4.setPinchZoom(false);
-
-//X축
-        chart4.getXAxis().setDrawGridLines(true);
-        chart4.getXAxis().setDrawAxisLine(false);
-
-        chart4.getXAxis().setEnabled(true);
-        chart4.getXAxis().setDrawGridLines(false);
-
-//Legend
-        Legend ll = chart4.getLegend();
-        ll.setEnabled(true);
-        ll.setFormSize(10f); // set the size of the legend forms/shapes
-        ll.setTextSize(12f);
-        ll.setTextColor(R.color.white);
-
-//Y축
-        YAxis leftAxis1 = chart4.getAxisLeft();
-        leftAxis1.setEnabled(true);
-        leftAxis1.setTextColor(getResources().getColor(R.color.white));
-        leftAxis1.setDrawGridLines(true);
-        leftAxis1.setGridColor(getResources().getColor(R.color.white));
-
-        YAxis rightAxis1 = chart4.getAxisRight();
-        rightAxis1.setEnabled(false);
-
-
-        Log.v("testdata1","chart invalidate");
-// don't forget to refresh the drawing
-        chart4.invalidate();
-
-
-        Thread t = new Thread(new Runnable() {
-            //TextView textview = (TextView) findViewById(R.id.result1);
-            String resultText = "[NULL]";
-            //String Ch1[];
-
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void run() {
-                while(true) {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        resultText = new Task().execute("http://172.30.1.29:50001/manage/Status/test").get();
-                        Log.v("testdata1",resultText);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-
-                    }
-
-                    try {
-                        JSONObject jsonObject = new JSONObject(resultText);
-                        avg = Double.parseDouble(jsonObject.getString("AVG"));
-                        std = Double.parseDouble(jsonObject.getString("STD"));
-                        max = Double.parseDouble(jsonObject.getString("MAX"));
-                        min = Double.parseDouble(jsonObject.getString("MIN"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    //Ch1 = resultText.split("\n");
-                    //double[] nums;
-                    //nums = Arrays.stream(Ch1).mapToDouble(Double::parseDouble).toArray();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            addEntry(avg,chart);
-                            addEntry(std,chart4);
-
-                            //chart.invalidate();
-                        }
-                    });
-
-                }
-            }
-        });
-        t.start();
-
 
 /*
         chart = (LineChart) findViewById(R.id.chart);
@@ -447,26 +362,27 @@ public class MainActivity extends AppCompatActivity {
         //thread1.start();
     }
 
-    private void addEntry(double num,LineChart chart) {
+    private void addEntry(double[] num) {
+
         LineData data = chart.getData();
+
         if (data == null) {
             data = new LineData();
             chart.setData(data);
         }
+
         ILineDataSet set = data.getDataSetByIndex(0);
         // set.addEntry(...); // can be called as well
+
         if (set == null) {
             set = createSet();
             data.addDataSet(set);
         }
-/*
+
         int i;
         for(i=0;i<num.length;i++){
             data.addEntry(new Entry((float)i, (float)num[i]), 0);
         }
-*/
-
-        data.addEntry(new Entry((float)i++, (float)num), 0);
 
         //data.addEntry(new Entry((float)set.getEntryCount(), (float)num), 0);
         data.notifyDataChanged();
@@ -474,13 +390,11 @@ public class MainActivity extends AppCompatActivity {
         // let the chart know it's data has changed
         chart.notifyDataSetChanged();
 
-        chart.setVisibleXRangeMaximum(120);
+        chart.setVisibleXRangeMaximum(5120);
         // this automatically refreshes the chart (calls invalidate())
         chart.moveViewTo(data.getEntryCount(), 50f, YAxis.AxisDependency.LEFT);
 
     }
-
-
 
 
 
@@ -491,11 +405,11 @@ public class MainActivity extends AppCompatActivity {
         LineDataSet set = new LineDataSet(null, "Real-time Line Data");
         set.setLineWidth(1f);
         set.setDrawValues(false);
-        set.setValueTextColor(getResources().getColor(R.color.black));
+        set.setValueTextColor(getResources().getColor(R.color.white));
         set.setColor(getResources().getColor(R.color.green));
         set.setMode(LineDataSet.Mode.LINEAR);
         set.setDrawCircles(false);
-        //set.setHighLightColor(Color.rgb(0, 0, 0));
+        set.setHighLightColor(Color.rgb(190, 190, 190));
 
         return set;
     }
@@ -512,7 +426,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            resultText1 = new Task().execute("http://175.215.251.220:50001/manage/Status/info").get();
+                            resultText1 = new Task().execute("http://203.250.77.238:50001/manage/Status/info").get();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         } catch (ExecutionException e) {
