@@ -85,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
 
         Button button2 = findViewById(R.id.button2);
 
-        Thread thread2 = new Thread(new );
-        thread2.start();
+        //Thread thread2 = new Thread(new );
+        //thread2.start();
 
         button2.setOnClickListener(new Button.OnClickListener(){
             @Override
