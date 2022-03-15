@@ -1,32 +1,30 @@
 package com.example.restapi;
 
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -34,21 +32,18 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.IPieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainActivity extends AppCompatActivity {
-    public LineChart chart;
-    public LineChart chart4;
+    //public LineChart chart;
+    //public LineChart chart4;
 
     public PieChart pieChart;
     public PieChart pieChart2;
@@ -56,9 +51,11 @@ public class MainActivity extends AppCompatActivity {
     public float i=0;
 
 
-    Handler mHandler = null;
-    Handler mHandler2 = null;
+    //Handler mHandler = null;
+    //Handler mHandler2 = null;
 
+    double rms = 0.0;
+    double peak = 0.0;
 
 
 
@@ -66,27 +63,41 @@ public class MainActivity extends AppCompatActivity {
     double ram_total = 0.0;
     double ram_usage = 0.0;
     double ram_usage_per = 0.0;
+    //public static Context context_main;
 
-    double avg = 0.0;
-    double std = 0.0;
-    double max = 0.0;
-    double min = 0.0;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //context_main = this;
 
-
-        mHandler = new Handler();
-        mHandler2 = new Handler();
-        chart = (LineChart) findViewById(R.id.chart);
-        chart4 = (LineChart) findViewById(R.id.chart4);
+        //mHandler = new Handler();
+        //mHandler2 = new Handler();
+        //chart = (LineChart) findViewById(R.id.chart);
+        //chart4 = (LineChart) findViewById(R.id.chart4);
         pieChart = (PieChart)findViewById(R.id.chart2);
         pieChart2 = (PieChart)findViewById(R.id.chart3);
 
 
+        Button button2 = findViewById(R.id.button2);
+
+        Thread thread2 = new Thread(new );
+        thread2.start();
+
+        button2.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getApplicationContext(),DrawFeature.class);
+                startActivity(intent);
+            }
+        });
+
+/*
         //차트1
         chart.setDrawGridBackground(true);
         chart.setBackgroundColor(getResources().getColor(R.color.black));
@@ -96,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         chart.getDescription().setEnabled(true);
         Description des = chart.getDescription();
         des.setEnabled(true);
-        des.setText("Real-Time DATA");
+        des.setText("RMS");
         des.setTextSize(15f);
         des.setTextColor(R.color.white);
 
@@ -141,9 +152,9 @@ public class MainActivity extends AppCompatActivity {
 // don't forget to refresh the drawing
         chart.invalidate();
 
+*/
 
-
-
+/*
         //차트2
         chart4.setDrawGridBackground(true);
         chart4.setBackgroundColor(getResources().getColor(R.color.black));
@@ -153,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         chart4.getDescription().setEnabled(true);
         Description des1 = chart4.getDescription();
         des1.setEnabled(true);
-        des1.setText("Real-Time DATA");
+        des1.setText("PEAK");
         des1.setTextSize(15f);
         des1.setTextColor(R.color.white);
 
@@ -197,6 +208,9 @@ public class MainActivity extends AppCompatActivity {
 
 // don't forget to refresh the drawing
         chart4.invalidate();
+*/
+
+
 
 
         //원차트1
@@ -328,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
 
 */
 
-
+/*
         Thread t = new Thread(new Runnable() {
             //TextView textview = (TextView) findViewById(R.id.result1);
             String resultText = "[NULL]";
@@ -338,13 +352,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 while(true) {
+
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     try {
-                        resultText = new Task().execute("http://172.30.1.29:50001/manage/Status/test").get();
+                        resultText = new Task().execute("http://203.250.77.240:50001/manage/Status/test").get();
 
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -371,6 +386,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
 
+
                             addEntry(avg,chart);
                             addEntry(std,chart4);
 
@@ -380,7 +396,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        t.start();
+*/
+
+        //t.start();
+
+        //thread1 = new getFeature();
 
 
 /*
@@ -443,7 +463,115 @@ public class MainActivity extends AppCompatActivity {
         //ExThread thread1 = new ExThread();
         //thread1.start();
     }
+//데이터받는 스레드
 
+    private class getFeature implements Runnable {
+        //private final AtomicBoolean condition = new AtomicBoolean(false);
+
+        public getFeature(){
+
+        }
+
+        String resultText = "[NULL]";
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        public void run() {
+
+
+            //Log.v("thread","condition : "+condition);
+            while(true) {
+                Log.v("thread","run");
+
+                try {
+                    Thread.sleep(1000);
+                    resultText = new Task().execute("http://203.250.77.240:50001/manage/Status/feature").get();
+
+                    JSONObject jsonObject = new JSONObject(resultText);
+                    rms = Double.parseDouble(jsonObject.getString("RMS"));
+                    peak = Double.parseDouble(jsonObject.getString("PEAK"));
+                    Log.v("dattt","rms : "+rms);
+                    Log.v("dattt","peak : "+peak);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Log.v("testdata1","zz");
+
+                //푸시알림림
+
+               if(rms>0.8){
+
+                    NotificationManager notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                    //Notification 객체를 생성해주는 건축가객체 생성(AlertDialog 와 비슷)
+                    NotificationCompat.Builder builder= null;
+
+                    //Oreo 버전(API26 버전)이상에서는 알림시에 NotificationChannel 이라는 개념이 필수 구성요소가 됨.
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+
+                        String channelID="channel_01"; //알림채널 식별자
+                        String channelName="MyChannel01"; //알림채널의 이름(별명)
+
+                        //알림채널 객체 만들기
+                        NotificationChannel channel= new NotificationChannel(channelID,channelName,NotificationManager.IMPORTANCE_DEFAULT);
+
+                        //알림매니저에게 채널 객체의 생성을 요청
+                        notificationManager.createNotificationChannel(channel);
+
+                        //알림건축가 객체 생성
+                        builder=new NotificationCompat.Builder(MainActivity.this, channelID);
+
+
+                    }else{
+                        //알림 건축가 객체 생성
+                        builder= new NotificationCompat.Builder(MainActivity.this, (Notification) null);
+                    }
+
+
+                    //건축가에게 원하는 알림의 설정작업
+                    builder.setSmallIcon(android.R.drawable.ic_menu_view);
+
+                    //상태바를 드래그하여 아래로 내리면 보이는
+                    //알림창(확장 상태바)의 설정
+                    builder.setContentTitle("*이상신호*");//알림창 제목
+                    builder.setContentText("이상신호감지");//알림창 내용
+                    //알림창의 큰 이미지
+                    //Bitmap bm= BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher_background);
+                    //builder.setLargeIcon(bm);//매개변수가 Bitmap을 줘야한다.
+
+                    //건축가에게 알림 객체 생성하도록
+                    Notification notification=builder.build();
+
+                    //알림매니저에게 알림(Notify) 요청
+                    notificationManager.notify(1, notification);
+                }
+
+                //Ch1 = resultText.replace("Ch1", "").split(",");
+                //double[] nums;
+                //nums = Arrays.stream(Ch1).mapToDouble(Double::parseDouble).toArray();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        //addEntry(rms,chart);
+                        //addEntry(peak,chart4);
+
+                    }
+                });
+
+            }
+        }
+
+    }
+
+//라인데이터 관리
+    /*
     private void addEntry(double num,LineChart chart) {
 
         LineData data = chart.getData();
@@ -470,7 +598,7 @@ public class MainActivity extends AppCompatActivity {
         // let the chart know it's data has changed
         chart.notifyDataSetChanged();
 
-        chart.setVisibleXRangeMaximum(120);
+        chart.setVisibleXRangeMaximum(60);
         // this automatically refreshes the chart (calls invalidate())
         chart.moveViewTo(data.getEntryCount(), 50f, YAxis.AxisDependency.LEFT);
 
@@ -494,10 +622,13 @@ public class MainActivity extends AppCompatActivity {
         return set;
     }
 
-
-
+*/
+//파이차트
 
     public void mOnClick(View v){
+        //getFeature runnabl = new getFeature();
+        //Thread thread2 = new Thread(new getFeature());
+
         switch (v.getId()){
             case R.id.button1:
 
@@ -506,7 +637,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            resultText1 = new Task().execute("http://172.30.1.29:50001/manage/Status/info").get();
+                            resultText1 = new Task().execute("http://203.250.77.240:50001/manage/Status/info").get();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         } catch (ExecutionException e) {
@@ -628,6 +759,17 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }).start();
+
+            case R.id.button2:
+
+                //thread2.start();
+
+
+
+
+
+
+
         }
     }
 
