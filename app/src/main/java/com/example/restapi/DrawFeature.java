@@ -40,8 +40,8 @@ public class DrawFeature extends AppCompatActivity {
 
     int i=0;
 
-    //double rms = 0.0;
-    //double peak = 0.0;
+    double rms = 0.0;
+    double peak = 0.0;
 
 
 
@@ -192,9 +192,25 @@ public class DrawFeature extends AppCompatActivity {
             //Log.v("thread","condition : "+condition);
             while(true) {
 
+                try {
+                    Thread.sleep(100);
+                    resultText = new Task().execute("http://203.250.77.240:50010/manage/Status/feature").get();
+                    JSONObject jsonObject = new JSONObject(resultText);
+                    rms = Double.parseDouble(jsonObject.getString("RMS"));
+                    peak = Double.parseDouble(jsonObject.getString("PEAK"));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.v("testdata1","zz");
 
 
-                if(rms>0.8){
+                if(peak>0.24){
 
                     NotificationManager notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 

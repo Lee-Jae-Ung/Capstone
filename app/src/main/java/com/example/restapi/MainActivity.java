@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
     //public LineChart chart;
     //public LineChart chart4;
 
-    public PieChart pieChart;
-    public PieChart pieChart2;
+    //public PieChart pieChart;
+    //public PieChart pieChart2;
 
     public float i=0;
 
@@ -54,18 +54,14 @@ public class MainActivity extends AppCompatActivity {
     //Handler mHandler = null;
     //Handler mHandler2 = null;
 
-    double rms = 0.0;
-    double peak = 0.0;
+    //double rms = 0.0;
+    //double peak = 0.0;
 
 
 
-    double cpu = 0.0;
-    double ram_total = 0.0;
-    double ram_usage = 0.0;
-    double ram_usage_per = 0.0;
     //public static Context context_main;
 
-
+    public DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);;
 
 
     @Override
@@ -79,11 +75,30 @@ public class MainActivity extends AppCompatActivity {
         //mHandler2 = new Handler();
         //chart = (LineChart) findViewById(R.id.chart);
         //chart4 = (LineChart) findViewById(R.id.chart4);
-        pieChart = (PieChart)findViewById(R.id.chart2);
-        pieChart2 = (PieChart)findViewById(R.id.chart3);
+        //pieChart = (PieChart)findViewById(R.id.chart2);
+        //pieChart2 = (PieChart)findViewById(R.id.chart3);
 
-
+        Button button1 = findViewById(R.id.button1);
         Button button2 = findViewById(R.id.button2);
+        Button button3 = findViewById(R.id.control);
+        //Thread thread2 = new Thread(new );
+        //thread2.start();
+
+
+        mDbOpenHelper.open();
+        mDbOpenHelper.create();
+
+        button1.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+
+                Intent intent1 = new Intent(getApplicationContext(),DrawStatus.class);
+                startActivity(intent1);
+            }
+        });
+
+
+
 
         //Thread thread2 = new Thread(new );
         //thread2.start();
@@ -92,8 +107,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getApplicationContext(),DrawFeature.class);
-                startActivity(intent);
+                Intent intent2 = new Intent(getApplicationContext(),DrawFeature.class);
+                startActivity(intent2);
+            }
+        });
+
+        button3.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+
+                Intent intent3 = new Intent(getApplicationContext(),SetIP.class);
+                startActivity(intent3);
             }
         });
 
@@ -464,7 +488,7 @@ public class MainActivity extends AppCompatActivity {
         //thread1.start();
     }
 //데이터받는 스레드
-
+/*
     private class getFeature implements Runnable {
         //private final AtomicBoolean condition = new AtomicBoolean(false);
 
@@ -569,7 +593,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
+*/
 //라인데이터 관리
     /*
     private void addEntry(double num,LineChart chart) {
@@ -624,7 +648,7 @@ public class MainActivity extends AppCompatActivity {
 
 */
 //파이차트
-
+/*
     public void mOnClick(View v){
         //getFeature runnabl = new getFeature();
         //Thread thread2 = new Thread(new getFeature());
@@ -762,17 +786,11 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.button2:
 
-                //thread2.start();
-
-
-
-
-
-
+                //thread2.start()
 
         }
     }
-
+*/
 /*
     private class ExThread extends Thread {
         TextView textview = (TextView) findViewById(R.id.result1);
