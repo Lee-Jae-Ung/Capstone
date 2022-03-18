@@ -13,6 +13,7 @@ public final class DataBases {
                 +_ID+" integer primary key autoincrement, "
                 +DEVICENAME+" text not null , "
                 +LOCATION+" text not null , "
-                +IP+" integer not null ); ";
+                +IP+" text not null ); ";
+
     }
 }

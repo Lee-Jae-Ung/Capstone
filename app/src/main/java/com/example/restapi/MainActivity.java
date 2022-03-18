@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     //public PieChart pieChart;
     //public PieChart pieChart2;
 
-    public float i=0;
 
 
     //Handler mHandler = null;
@@ -60,9 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     //public static Context context_main;
-
-    public DbOpenHelper mDbOpenHelper = new DbOpenHelper(this);;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +81,7 @@ public class MainActivity extends AppCompatActivity {
         //thread2.start();
 
 
-        mDbOpenHelper.open();
-        mDbOpenHelper.create();
+
 
         button1.setOnClickListener(new Button.OnClickListener(){
             @Override

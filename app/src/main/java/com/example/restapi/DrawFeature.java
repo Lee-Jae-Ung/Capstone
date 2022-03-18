@@ -193,7 +193,7 @@ public class DrawFeature extends AppCompatActivity {
             while(true) {
 
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(1000);
                     resultText = new Task().execute("http://203.250.77.240:50010/manage/Status/feature").get();
                     JSONObject jsonObject = new JSONObject(resultText);
                     rms = Double.parseDouble(jsonObject.getString("RMS"));
