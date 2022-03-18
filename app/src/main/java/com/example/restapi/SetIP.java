@@ -2,6 +2,7 @@ package com.example.restapi;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothClass;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -195,12 +196,21 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
                 DeviceName = edit_device.getText().toString();
                 Location = edit_location.getText().toString();
                 Ip = edit_Ip.getText().toString();
-                mDbOpenHelper.open();
-                mDbOpenHelper.insertColumn(DeviceName, Location, Ip);
-                showDatabase(sort);
-                setInsertMode();
-                edit_device.requestFocus();
-                edit_device.setCursorVisible(true);
+
+                if(DeviceName.equals("")||Location.equals("")||Ip.equals("")) {
+                    Toast.makeText(SetIP.this,"값을 입력하시오",Toast.LENGTH_SHORT);
+                    Log.v("insert","실패");
+                }
+                else {
+                    Log.v("insert","성공");
+
+                    mDbOpenHelper.open();
+                    mDbOpenHelper.insertColumn(DeviceName, Location, Ip);
+                    showDatabase(sort);
+                    setInsertMode();
+                    edit_device.requestFocus();
+                    edit_device.setCursorVisible(true);
+                }
                 break;
 
             case R.id.btn_update:

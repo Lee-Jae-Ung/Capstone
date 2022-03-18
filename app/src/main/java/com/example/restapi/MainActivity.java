@@ -12,8 +12,11 @@ import android.os.Bundle;
 
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -106,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent2);
             }
         });
-
+/*
         button3.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -115,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent3);
             }
         });
+
+ */
 
 /*
         //차트1
@@ -481,6 +486,24 @@ public class MainActivity extends AppCompatActivity {
 
         //ExThread thread1 = new ExThread();
         //thread1.start();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)    {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.search_action:
+                Intent intent3 = new Intent(getApplicationContext(),SetIP.class);
+                startActivity(intent3);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 //데이터받는 스레드
 /*
