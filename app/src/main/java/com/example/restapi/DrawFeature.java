@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,8 +43,8 @@ public class DrawFeature extends AppCompatActivity {
 
     double rms = 0.0;
     double peak = 0.0;
-
-
+    boolean run = true;
+    String ip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,11 @@ public class DrawFeature extends AppCompatActivity {
         setContentView(R.layout.activity_chart);
 
         context_main = this;
+
+
+
+        Intent intent = getIntent();
+        ip = intent.getStringExtra("ip");
 
         mHandler = new Handler();
         mHandler2 = new Handler();
@@ -190,11 +196,11 @@ public class DrawFeature extends AppCompatActivity {
 
 
             //Log.v("thread","condition : "+condition);
-            while(true) {
+            while(run) {
 
                 try {
                     Thread.sleep(1000);
-                    resultText = new Task().execute("http://203.250.77.240:50010/manage/Status/feature").get();
+                    resultText = new Task().execute("http://"+ip+":50010/manage/Status/feature").get();
                     JSONObject jsonObject = new JSONObject(resultText);
                     rms = Double.parseDouble(jsonObject.getString("RMS"));
                     peak = Double.parseDouble(jsonObject.getString("PEAK"));

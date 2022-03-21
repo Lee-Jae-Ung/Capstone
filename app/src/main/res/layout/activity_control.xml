@@ -4,44 +4,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
 
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
         <TextView
+            android:id="@+id/devname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="DEVICE1"
-            >
+            android:layout_marginLeft="10dp">
         </TextView>
 
         <TextView
+            android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="울산시 남구 대학로"
-            >
+            android:layout_marginLeft="10dp"
+            android:text="울산시 남구 대학로">
         </TextView>
 
-
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="100dp"
+        <TextView
+            android:id="@+id/ipaddr"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Status"
-            />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="feature"
-            />
+            android:layout_marginLeft="10dp"
+            android:text="203.250.77.240">
+        </TextView>
     </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/status"
+            android:layout_width="100dp"
+            android:layout_marginLeft="10dp"
+            android:layout_height="wrap_content"
+            android:text="Status" />
+
+        <Button
+            android:id="@+id/feautre"
+            android:layout_width="100dp"
+            android:layout_marginLeft="10dp"
+            android:layout_height="wrap_content"
+            android:text="feature" />
+    </LinearLayout>
+
+
 
 
 

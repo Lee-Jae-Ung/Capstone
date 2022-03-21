@@ -3,11 +3,13 @@ package com.example.restapi;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 
 public class DbOpenHelper {
 
@@ -17,7 +19,7 @@ public class DbOpenHelper {
     private DatabaseHelper mDBHelper;
     private Context mCtx;
 
-    private class DatabaseHelper extends SQLiteOpenHelper{
+    public static class DatabaseHelper extends SQLiteOpenHelper{
 
         public DatabaseHelper(Context context, String name, CursorFactory factory, int version) {
             super(context, name, factory, version);
@@ -86,6 +88,7 @@ public class DbOpenHelper {
     public Cursor selectColumns(){
         return mDB.query(DataBases.CreateDB._TABLENAME0, null, null, null, null, null, null);
     }
+
 
     // sort by column
     public Cursor sortColumn(String sort){

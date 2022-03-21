@@ -1,11 +1,14 @@
 package com.example.restapi;
 
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,12 +18,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -58,17 +66,20 @@ public class MainActivity extends AppCompatActivity {
 
     //double rms = 0.0;
     //double peak = 0.0;
+    public static Context mContext;
 
-
-
+    ListView listview ;
+    MainListBtnAdapter adapter;
+    ArrayList<MainListBtn> items = new ArrayList<MainListBtn>() ;
     //public static Context context_main;
+    DbOpenHelper mDbOpenHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //context_main = this;
+        mContext = this;
 
         //mHandler = new Handler();
         //mHandler2 = new Handler();
@@ -77,15 +88,55 @@ public class MainActivity extends AppCompatActivity {
         //pieChart = (PieChart)findViewById(R.id.chart2);
         //pieChart2 = (PieChart)findViewById(R.id.chart3);
 
-        Button button1 = findViewById(R.id.button1);
-        Button button2 = findViewById(R.id.button2);
+        //Button button1 = findViewById(R.id.button1);
+        //Button button2 = findViewById(R.id.button2);
         //Button button3 = findViewById(R.id.control);
         //Thread thread2 = new Thread(new );
         //thread2.start();
 
 
+        //Log.v("dbtest",""+mDbOpenHelper.selectColumns());
 
 
+
+        //ListView listview ;
+        //ainListBtnAdapter adapter;
+        //ArrayList<MainListBtn> items = new ArrayList<MainListBtn>() ;
+
+        mDbOpenHelper = new DbOpenHelper(this);
+        mDbOpenHelper.open();
+        mDbOpenHelper.create();
+        Cursor iCursor = mDbOpenHelper.selectColumns();
+        String Result = null;
+        while (iCursor.moveToNext()) {
+
+            @SuppressLint("Range") String tempId = iCursor.getString(iCursor.getColumnIndex("_id"));
+            @SuppressLint("Range") String tempDev = iCursor.getString(iCursor.getColumnIndex("devicename"));
+            @SuppressLint("Range") String tempLoc = iCursor.getString(iCursor.getColumnIndex("location"));
+            @SuppressLint("Range") String tempIp = iCursor.getString(iCursor.getColumnIndex("ip"));
+            loadItemsFromDB(items,tempDev,tempLoc,tempIp);
+        }
+        // items 로드.
+
+        //loadItemsFromDB(items,"abd","ulsans","203.250.77.241");
+        // Adapter 생성
+        adapter = new MainListBtnAdapter(MainActivity.this, R.layout.activity_control, items) ;
+
+        // 리스트뷰 참조 및 Adapter달기
+        listview = (ListView) findViewById(R.id.device_list_view);
+        listview.setAdapter(adapter);
+
+
+
+        //Log.v("test", "" + Result);
+
+
+    }
+
+
+
+//메인 버튼
+/*
         button1.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -109,6 +160,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent2);
             }
         });
+        */
+
 /*
         button3.setOnClickListener(new Button.OnClickListener(){
             @Override
@@ -176,9 +229,9 @@ public class MainActivity extends AppCompatActivity {
 // don't forget to refresh the drawing
         chart.invalidate();
 
-*/
 
-/*
+
+
         //차트2
         chart4.setDrawGridBackground(true);
         chart4.setBackgroundColor(getResources().getColor(R.color.black));
@@ -232,13 +285,13 @@ public class MainActivity extends AppCompatActivity {
 
 // don't forget to refresh the drawing
         chart4.invalidate();
-*/
+
 
 
 
 
         //원차트1
-/*
+
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
         pieChart.setExtraOffsets(5,10,5,5);
@@ -281,10 +334,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         pieChart.invalidate();
-*/
+
 
         //원차트2
-/*
+
         //원차트2
         pieChart2.setUsePercentValues(true);
         pieChart2.getDescription().setEnabled(false);
@@ -334,10 +387,10 @@ public class MainActivity extends AppCompatActivity {
 
         pieChart2.setData(data2);
         pieChart2.invalidate();
-*/
 
 
-/*
+
+
         Thread t1 = new Thread(new Runnable() {
             String resultText1 = "[NULL]";
             @Override
@@ -364,9 +417,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-*/
 
-/*
+
+
         Thread t = new Thread(new Runnable() {
             //TextView textview = (TextView) findViewById(R.id.result1);
             String resultText = "[NULL]";
@@ -420,14 +473,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-*/
+
 
         //t.start();
 
         //thread1 = new getFeature();
 
 
-/*
+
         chart = (LineChart) findViewById(R.id.chart);
         LineData chartData = new LineData();
 
@@ -447,9 +500,9 @@ public class MainActivity extends AppCompatActivity {
 
         chart.setData(chartData);
         chart.invalidate();
-*/
 
-/*
+
+
         chart = (LineChart) findViewById(R.id.chart);
 
         chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -465,28 +518,37 @@ public class MainActivity extends AppCompatActivity {
         feedMultiple();
 */
 
-        //TextView textview = (TextView)findViewById(R.id.result1);
-        //String resultText = "[NULL]";
 
-        /*
-        try{
-            resultText = new Task().execute().get();
-        } catch (InterruptedException e){
-            e.printStackTrace();
-        }
-        catch (ExecutionException e){
-            e.printStackTrace();
+
+    public boolean loadItemsFromDB(ArrayList<MainListBtn> list,String devname,String location, String ip) {
+        MainListBtn item ;
+        int i ;
+
+        if (list == null) {
+            list = new ArrayList<MainListBtn>() ;
         }
 
-        textview.setText(resultText);
-
-         */
-
+        // 순서를 위한 i 값을 1로 초기화.
+        i = 1 ;
 
 
-        //ExThread thread1 = new ExThread();
-        //thread1.start();
+        item = new MainListBtn() ;
+
+        item.setText1(devname) ;
+        item.setText2(location) ;
+        item.setText3(ip) ;
+
+
+
+        // 아이템 생성.
+        list.add(item) ;
+        i++ ;
+
+
+
+        return true ;
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu)    {
         getMenuInflater().inflate(R.menu.main_menu, menu);

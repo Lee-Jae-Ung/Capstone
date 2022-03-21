@@ -50,6 +50,9 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
     static ArrayList<String> arrayData = new ArrayList<String>();
     private DbOpenHelper mDbOpenHelper;
 
+
+    ArrayList<MainListBtn> items = new ArrayList<MainListBtn>() ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,6 +192,7 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
         return text;
     }
 
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -202,26 +206,44 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
                     Log.v("insert","실패");
                 }
                 else {
-                    Log.v("insert","성공");
+
 
                     mDbOpenHelper.open();
                     mDbOpenHelper.insertColumn(DeviceName, Location, Ip);
                     showDatabase(sort);
                     setInsertMode();
+                    Log.v("dbtest",""+mDbOpenHelper);
                     edit_device.requestFocus();
                     edit_device.setCursorVisible(true);
+                    Intent intent1 = ((MainActivity)MainActivity.mContext).getIntent();
+                    ((MainActivity)MainActivity.mContext).finish(); //현재 액티비티 종료 실시
+                    ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0); //효과 없애기
+                    ((MainActivity)MainActivity.mContext).startActivity(intent1); //현재 액티비티 재실행 실시
+                    ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0);
                 }
+
+
                 break;
 
             case R.id.btn_update:
+
                 DeviceName = edit_device.getText().toString();
                 Location = edit_location.getText().toString();
                 Ip = edit_Ip.getText().toString();
+
+
+
                 mDbOpenHelper.updateColumn(nowIndex,DeviceName, Location, Ip);
                 showDatabase(sort);
                 setInsertMode();
                 edit_device.requestFocus();
                 edit_device.setCursorVisible(true);
+
+                Intent intent2 = ((MainActivity)MainActivity.mContext).getIntent();
+                ((MainActivity)MainActivity.mContext).finish(); //현재 액티비티 종료 실시
+                ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0); //효과 없애기
+                ((MainActivity)MainActivity.mContext).startActivity(intent2); //현재 액티비티 재실행 실시
+                ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0);
                 break;
 
             case R.id.btn_delete:
@@ -233,15 +255,16 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
                 setInsertMode();
                 edit_device.requestFocus();
                 edit_device.setCursorVisible(true);
+                Intent intent3 = ((MainActivity)MainActivity.mContext).getIntent();
+                ((MainActivity)MainActivity.mContext).finish(); //현재 액티비티 종료 실시
+                ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0); //효과 없애기
+                ((MainActivity)MainActivity.mContext).startActivity(intent3); //현재 액티비티 재실행 실시
+                ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0);
                 break;
 
             case R.id.btn_select:
                 showDatabase(sort);
                 break;
-
-
-
-
 
             case R.id.check_devicename:
                 check_Location.setChecked(false);
@@ -262,6 +285,28 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
                 break;
         }
 
+    }
+    public boolean loadItemsFromDB(ArrayList<MainListBtn> list,String devname,String location, String ip) {
+        MainListBtn item ;
+        int i ;
+
+        if (list == null) {
+            list = new ArrayList<MainListBtn>() ;
+        }
+
+        // 순서를 위한 i 값을 1로 초기화.
+        i = 1 ;
+
+        // 아이템 생성.
+        item = new MainListBtn() ;
+        item.setText1(devname) ;
+        item.setText2(location) ;
+        item.setText3(ip) ;
+        list.add(item) ;
+        i++ ;
+
+
+        return true ;
     }
 
 
