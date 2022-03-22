@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/UOU/AndroidStudioProjects/Android_RESTAPI/app/src/main/res/drawable/round_back.xml" value="0.2035" />
+        <entry key="..\:/Users/UOU/AndroidStudioProjects/Android_RESTAPI/app/src/main/res/drawable/round_control.xml" value="0.2035" />
         <entry key="..\:/Users/UOU/AndroidStudioProjects/Android_RESTAPI/app/src/main/res/layout/activity_chart.xml" value="0.1778115501519757" />
         <entry key="..\:/Users/UOU/AndroidStudioProjects/Android_RESTAPI/app/src/main/res/layout/activity_control.xml" value="0.25" />
         <entry key="..\:/Users/UOU/AndroidStudioProjects/Android_RESTAPI/app/src/main/res/layout/activity_main.xml" value="0.1875" />

@@ -45,6 +45,7 @@ public class DrawFeature extends AppCompatActivity {
     double peak = 0.0;
     boolean run = true;
     String ip;
+    public static Thread thread2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,8 +176,20 @@ public class DrawFeature extends AppCompatActivity {
 
 
 
-        Thread thread2 = new Thread(new getFeature());
+        thread2 = new Thread(new getFeature());
         thread2.start();
+
+    }
+    @Override
+    public void onBackPressed(){
+        run = false;
+        thread2.interrupt();
+        Intent intent = ((MainActivity)MainActivity.mContext).getIntent();
+        ((MainActivity)MainActivity.mContext).finish(); //현재 액티비티 종료 실시
+        ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0); //효과 없애기
+        ((MainActivity)MainActivity.mContext).startActivity(intent); //현재 액티비티 재실행 실시
+        ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0);
+        //Log.v("threadstatus2",""+thread2.isInterrupted());
 
     }
 
@@ -199,14 +212,16 @@ public class DrawFeature extends AppCompatActivity {
             while(run) {
 
                 try {
+                    Log.v("ipipip","feature : "+ip);
+
                     Thread.sleep(1000);
                     resultText = new Task().execute("http://"+ip+":50010/manage/Status/feature").get();
+                    Log.v("resultText",""+resultText);
                     JSONObject jsonObject = new JSONObject(resultText);
                     rms = Double.parseDouble(jsonObject.getString("RMS"));
                     peak = Double.parseDouble(jsonObject.getString("PEAK"));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {

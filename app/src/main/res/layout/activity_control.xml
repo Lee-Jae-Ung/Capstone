@@ -1,14 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
     tools:context=".MainActivity">
 
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="장비명"
+                android:textSize="20dp"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp">
+            </TextView>
+            <TextView
+                android:id="@+id/devname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DEVICE1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp">
 
+            </TextView>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="위치"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_horizontal">
+            </TextView>
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
 
+                android:layout_marginLeft="10dp"
+                android:text="울산시 남구 대학로">
+            </TextView>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="IP"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_horizontal">
+            </TextView>
+            <TextView
+                android:id="@+id/ipaddr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+
+                android:layout_marginLeft="10dp"
+                android:text="203.250.77.240">
+            </TextView>
+        </TableRow>
+    </TableLayout>
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </View>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="right">
+        <android.widget.Button
+            android:background="@drawable/round_back"
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:text="Status" />
+
+        <android.widget.Button
+            android:background="@drawable/round_back"
+            android:id="@+id/feautre"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="feature" />
+    </LinearLayout>
+<!--
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -56,7 +153,7 @@
             android:layout_height="wrap_content"
             android:text="feature" />
     </LinearLayout>
-
+!-->
 
 
 

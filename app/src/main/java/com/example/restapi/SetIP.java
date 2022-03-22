@@ -309,5 +309,4 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
         return true ;
     }
 
-
 }

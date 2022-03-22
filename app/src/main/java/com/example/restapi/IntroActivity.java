@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 public class IntroActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro); //xml , java 소스 연결
+
+        ActionBar ab = getSupportActionBar() ;
+        ab.hide() ;
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

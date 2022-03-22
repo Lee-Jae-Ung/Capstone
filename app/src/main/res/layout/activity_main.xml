@@ -19,6 +19,8 @@
         <ListView
             android:id="@+id/device_list_view"
             android:layout_width="match_parent"
+            android:dividerHeight="2dp"
+            android:divider="#CFD8DC"
             android:layout_height="match_parent">
 
         </ListView>

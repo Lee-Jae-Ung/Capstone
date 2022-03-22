@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,17 +40,18 @@ import java.util.concurrent.ExecutionException;
 public class DrawStatus extends AppCompatActivity {
     public PieChart pieChart;
     public PieChart pieChart2;
+    public TextView text_ram;
 
     //double rms = 0.0;
     //double peak = 0.0;
 
 
     double cpu = 0.0;
-    double ram_total = 0.0;
+    String ram_total;
     double ram_usage = 0.0;
     double ram_usage_per = 0.0;
     String ip;
-
+    public static Thread thread2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,10 +62,23 @@ public class DrawStatus extends AppCompatActivity {
 
         pieChart = (PieChart)findViewById(R.id.chart2);
         pieChart2 = (PieChart)findViewById(R.id.chart3);
+        text_ram = (TextView)findViewById(R.id.ram);
 
-        Thread thread2 = new Thread(new getStatus());
+        thread2 = new Thread(new getStatus());
         thread2.start();
 
+
+    }
+
+    @Override
+    public void onBackPressed(){
+        thread2.interrupt();
+        //Log.v("threadstatus1",""+thread2.isInterrupted());
+        Intent intent = ((MainActivity)MainActivity.mContext).getIntent();
+        ((MainActivity)MainActivity.mContext).finish(); //현재 액티비티 종료 실시
+        ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0); //효과 없애기
+        ((MainActivity)MainActivity.mContext).startActivity(intent); //현재 액티비티 재실행 실시
+        ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0);
 
     }
 
@@ -82,10 +97,11 @@ public class DrawStatus extends AppCompatActivity {
         public void run() {
 
             try {
+                Log.v("ipipip","status : "+ip);
                 resultText1 = new Task().execute("http://" + ip + ":50010/manage/Status/info").get();
                 JSONObject jsonObject = new JSONObject(resultText1);
                 cpu = Double.parseDouble(jsonObject.getString("cpu").replace("%", ""));
-                ram_total = Double.parseDouble(jsonObject.getString("ram_total").replace("MB", ""));
+                ram_total = jsonObject.getString("ram_total").replace("MB", "");
                 ram_usage = Double.parseDouble(jsonObject.getString("ram_usage").replace("MB", ""));
                 ram_usage_per = Double.parseDouble(jsonObject.getString("ram_usage_per").replace("%", ""));
             } catch (JSONException e) {
@@ -99,7 +115,7 @@ public class DrawStatus extends AppCompatActivity {
                 @Override
                 public void run() {
 
-
+                    text_ram.setText(ram_total);
                     pieChart.setUsePercentValues(true);
                     pieChart.getDescription().setEnabled(false);
                     pieChart.setExtraOffsets(5, 10, 5, 5);
