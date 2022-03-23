@@ -52,6 +52,9 @@ public class DrawStatus extends AppCompatActivity {
     double ram_usage_per = 0.0;
     String ip;
     public static Thread thread2;
+    int[] col = new int[]{
+            Color.rgb(213,13,13), Color.rgb(162, 158, 158), Color.rgb(0,0,0),
+            Color.rgb(0,0,0), Color.rgb(0,0,0)};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,12 +77,7 @@ public class DrawStatus extends AppCompatActivity {
     public void onBackPressed(){
         thread2.interrupt();
         //Log.v("threadstatus1",""+thread2.isInterrupted());
-        Intent intent = ((MainActivity)MainActivity.mContext).getIntent();
-        ((MainActivity)MainActivity.mContext).finish(); //현재 액티비티 종료 실시
-        ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0); //효과 없애기
-        ((MainActivity)MainActivity.mContext).startActivity(intent); //현재 액티비티 재실행 실시
-        ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0);
-
+        super.onBackPressed();
     }
 
     private class getStatus implements Runnable {
@@ -123,7 +121,7 @@ public class DrawStatus extends AppCompatActivity {
                     pieChart.setDragDecelerationFrictionCoef(0.95f);
 
                     pieChart.setDrawHoleEnabled(false);
-                    pieChart.setHoleColor(Color.WHITE);
+                    pieChart.setHoleColor(Color.BLACK);
                     pieChart.setTransparentCircleRadius(61f);
 
 
@@ -134,7 +132,7 @@ public class DrawStatus extends AppCompatActivity {
 
 
                     Description description = new Description();
-                    description.setText("CPU"); //라벨
+                    description.setText("CPU (%)"); //라벨
                     description.setTextSize(30);
                     pieChart.setDescription(description);
 
@@ -147,12 +145,15 @@ public class DrawStatus extends AppCompatActivity {
 
                     dataSet.setSliceSpace(3f);
                     dataSet.setSelectionShift(5f);
-                    dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+                    //Color.rgb(217, 80, 138), Color.rgb(254, 149, 7), Color.rgb(254, 247, 120),
+                            //Color.rgb(106, 167, 134), Color.rgb(53, 194, 209)
+
+                    dataSet.setColors(col);
 
 
                     data1.addDataSet(dataSet);
-                    data1.setValueTextSize(10f);
-                    data1.setValueTextColor(Color.YELLOW);
+                    data1.setValueTextSize(20f);
+                    data1.setValueTextColor(Color.rgb(0,102,51));
 
                     pieChart.setData(data1);
 
@@ -179,7 +180,7 @@ public class DrawStatus extends AppCompatActivity {
 
 
                     Description description2 = new Description();
-                    description2.setText("RAM"); //라벨
+                    description2.setText("RAM (%)"); //라벨
                     description2.setTextSize(30);
                     pieChart2.setDescription(description2);
 
@@ -193,14 +194,14 @@ public class DrawStatus extends AppCompatActivity {
 
                     dataSet2.setSliceSpace(3f);
                     dataSet2.setSelectionShift(5f);
-                    dataSet2.setColors(ColorTemplate.JOYFUL_COLORS);
+                    dataSet2.setColors(col);
 
 
                     //PieData data = new PieData();
 
 
-                    data2.setValueTextSize(10f);
-                    data2.setValueTextColor(Color.YELLOW);
+                    data2.setValueTextSize(20f);
+                    data2.setValueTextColor(Color.rgb(0,102,51));
 
                     pieChart2.setData(data2);
                     pieChart2.invalidate();

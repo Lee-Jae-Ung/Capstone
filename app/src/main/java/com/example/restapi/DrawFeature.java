@@ -184,12 +184,7 @@ public class DrawFeature extends AppCompatActivity {
     public void onBackPressed(){
         run = false;
         thread2.interrupt();
-        Intent intent = ((MainActivity)MainActivity.mContext).getIntent();
-        ((MainActivity)MainActivity.mContext).finish(); //현재 액티비티 종료 실시
-        ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0); //효과 없애기
-        ((MainActivity)MainActivity.mContext).startActivity(intent); //현재 액티비티 재실행 실시
-        ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0);
-        //Log.v("threadstatus2",""+thread2.isInterrupted());
+        super.onBackPressed();
 
     }
 
@@ -214,7 +209,7 @@ public class DrawFeature extends AppCompatActivity {
                 try {
                     Log.v("ipipip","feature : "+ip);
 
-                    Thread.sleep(1000);
+                    Thread.sleep(50);
                     resultText = new Task().execute("http://"+ip+":50010/manage/Status/feature").get();
                     Log.v("resultText",""+resultText);
                     JSONObject jsonObject = new JSONObject(resultText);

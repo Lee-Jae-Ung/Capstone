@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class MainListBtnAdapter extends ArrayAdapter  {
 
@@ -66,6 +67,20 @@ public class MainListBtnAdapter extends ArrayAdapter  {
         devname.setText(listViewItem.getText1());
         location.setText(listViewItem.getText2());
         ip.setText(listViewItem.getText3());
+
+
+        String resultText = "[NULL]";
+        ImageView status = (ImageView) convertView.findViewById(R.id.default_status);
+        try
+        {
+            resultText = new Task().execute("http://" + ip + ":50010/manage/Status/connection").get();
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //if(resul)
 
         // button1 클릭 시 TextView(textView1)의 내용 변경.
         Button button1 = (Button) convertView.findViewById(R.id.status);
