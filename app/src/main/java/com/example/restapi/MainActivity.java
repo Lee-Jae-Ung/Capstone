@@ -29,6 +29,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -52,7 +53,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
     //public LineChart chart;
     //public LineChart chart4;
 
@@ -74,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
     //public static Context context_main;
     DbOpenHelper mDbOpenHelper;
 
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
         mContext = this;
 
+        swipeRefreshLayout = findViewById(R.id.swipe);
+        swipeRefreshLayout.setOnRefreshListener(this);
         //mHandler = new Handler();
         //mHandler2 = new Handler();
         //chart = (LineChart) findViewById(R.id.chart);
@@ -133,6 +138,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onRefresh(){
+        updateLayoutView();
+
+        swipeRefreshLayout.setRefreshing(false);
+    }
+    public void updateLayoutView(){
+
+    }
 
 
 //메인 버튼

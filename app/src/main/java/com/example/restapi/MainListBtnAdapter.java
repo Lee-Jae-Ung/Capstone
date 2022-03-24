@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -58,6 +62,7 @@ public class MainListBtnAdapter extends ArrayAdapter  {
         final TextView devname = (TextView) convertView.findViewById(R.id.devname);
         final TextView location = (TextView) convertView.findViewById(R.id.location);
         final TextView ip = (TextView) convertView.findViewById(R.id.ipaddr);
+        final ImageView cstatus = (ImageView) convertView.findViewById(R.id.default_status);
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
         final MainListBtn listViewItem = (MainListBtn) getItem(position);
@@ -69,17 +74,10 @@ public class MainListBtnAdapter extends ArrayAdapter  {
         ip.setText(listViewItem.getText3());
 
 
-        String resultText = "[NULL]";
-        ImageView status = (ImageView) convertView.findViewById(R.id.default_status);
-        try
-        {
-            resultText = new Task().execute("http://" + ip + ":50010/manage/Status/connection").get();
 
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+
+
         //if(resul)
 
         // button1 클릭 시 TextView(textView1)의 내용 변경.

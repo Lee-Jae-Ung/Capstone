@@ -18,6 +18,7 @@ import androidx.core.app.NotificationCompat;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -67,8 +68,8 @@ public class DrawFeature extends AppCompatActivity {
 
         //차트1
         chart.setDrawGridBackground(true);
-        chart.setBackgroundColor(getResources().getColor(R.color.black));
-        chart.setGridBackgroundColor(R.color.black);
+        chart.setBackgroundColor(getResources().getColor(R.color.white));
+        //chart.setGridBackgroundColor(R.color.black);
 
 // description text
         chart.getDescription().setEnabled(true);
@@ -76,7 +77,7 @@ public class DrawFeature extends AppCompatActivity {
         des.setEnabled(true);
         des.setText("RMS");
         des.setTextSize(15f);
-        des.setTextColor(R.color.white);
+        des.setTextColor(R.color.black);
 
 // touch gestures (false-비활성화)
         chart.setTouchEnabled(false);
@@ -94,21 +95,22 @@ public class DrawFeature extends AppCompatActivity {
 //X축
         chart.getXAxis().setDrawGridLines(true);
         chart.getXAxis().setDrawAxisLine(false);
-
+        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         chart.getXAxis().setEnabled(true);
         chart.getXAxis().setDrawGridLines(false);
+
 
 //Legend
         Legend l = chart.getLegend();
         l.setEnabled(true);
         l.setFormSize(10f); // set the size of the legend forms/shapes
         l.setTextSize(12f);
-        l.setTextColor(R.color.white);
+        l.setTextColor(R.color.black);
 
 //Y축
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setEnabled(true);
-        leftAxis.setTextColor(getResources().getColor(R.color.white));
+        leftAxis.setTextColor(getResources().getColor(R.color.black));
         leftAxis.setDrawGridLines(true);
         leftAxis.setGridColor(getResources().getColor(R.color.white));
 
@@ -122,8 +124,8 @@ public class DrawFeature extends AppCompatActivity {
 
         //차트2
         chart4.setDrawGridBackground(true);
-        chart4.setBackgroundColor(getResources().getColor(R.color.black));
-        chart4.setGridBackgroundColor(R.color.black);
+        chart4.setBackgroundColor(getResources().getColor(R.color.white));
+        //chart4.setGridBackgroundColor(R.color.black);
 
 // description text
         chart4.getDescription().setEnabled(true);
@@ -131,7 +133,7 @@ public class DrawFeature extends AppCompatActivity {
         des1.setEnabled(true);
         des1.setText("PEAK");
         des1.setTextSize(15f);
-        des1.setTextColor(R.color.white);
+        des1.setTextColor(R.color.black);
 
 // touch gestures (false-비활성화)
         chart4.setTouchEnabled(false);
@@ -149,6 +151,7 @@ public class DrawFeature extends AppCompatActivity {
 //X축
         chart4.getXAxis().setDrawGridLines(true);
         chart4.getXAxis().setDrawAxisLine(false);
+        chart4.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
 
         chart4.getXAxis().setEnabled(true);
         chart4.getXAxis().setDrawGridLines(false);
@@ -158,16 +161,16 @@ public class DrawFeature extends AppCompatActivity {
         ll.setEnabled(true);
         ll.setFormSize(10f); // set the size of the legend forms/shapes
         ll.setTextSize(12f);
-        ll.setTextColor(R.color.white);
+        ll.setTextColor(R.color.black);
 
 //Y축
         YAxis leftAxis1 = chart4.getAxisLeft();
         leftAxis1.setEnabled(true);
-        leftAxis1.setTextColor(getResources().getColor(R.color.white));
+        leftAxis1.setTextColor(getResources().getColor(R.color.black));
         leftAxis1.setDrawGridLines(true);
         leftAxis1.setGridColor(getResources().getColor(R.color.white));
 
-        YAxis rightAxis1 = chart.getAxisRight();
+        YAxis rightAxis1 = chart4.getAxisRight();
         rightAxis1.setEnabled(false);
 
 
@@ -281,8 +284,8 @@ public class DrawFeature extends AppCompatActivity {
                     public void run() {
 
 
-                        addEntry(rms,chart);
-                        addEntry(peak,chart4);
+                        addEntry(rms,chart,"RMS");
+                        addEntry(peak,chart4,"PEAK");
 
                     }
                 });
@@ -292,7 +295,7 @@ public class DrawFeature extends AppCompatActivity {
 
     }
 
-    private void addEntry(double num,LineChart chart) {
+    private void addEntry(double num,LineChart chart,String label) {
 
         LineData data = chart.getData();
 
@@ -305,7 +308,7 @@ public class DrawFeature extends AppCompatActivity {
         // set.addEntry(...); // can be called as well
 
         if (set == null) {
-            set = createSet();
+            set = createSet(label);
             data.addDataSet(set);
         }
 
@@ -326,9 +329,9 @@ public class DrawFeature extends AppCompatActivity {
 
 
 
-    private LineDataSet createSet() {
+    private LineDataSet createSet(String label) {
 
-        LineDataSet set = new LineDataSet(null, "Real-time Line Data");
+        LineDataSet set = new LineDataSet(null, label);
         set.setLineWidth(1f);
         set.setDrawValues(false);
         set.setValueTextColor(getResources().getColor(R.color.white));

@@ -1,7 +1,10 @@
 package com.example.restapi;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +16,7 @@ import java.net.URL;
 public class Task extends AsyncTask<String, Void, String> {
 
     private String str, receiveMsg;
-
+    int rescode;
 
     @Override
     protected String doInBackground(String... strings) {
@@ -22,6 +25,11 @@ public class Task extends AsyncTask<String, Void, String> {
         try{
             url = new URL(strings[0]);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(3000);
+            rescode = conn.getResponseCode();
+
+            Log.v("receiveMsg",""+rescode);
+
 
             if(conn.getResponseCode() == conn.HTTP_OK){
                 InputStreamReader tmp = new InputStreamReader(conn.getInputStream(),"UTF-8");
@@ -32,21 +40,28 @@ public class Task extends AsyncTask<String, Void, String> {
                 }
                 receiveMsg = buffer.toString();
                 Log.i("receiveMsg : ",receiveMsg);
-
                 conn.disconnect();
                 tmp.close();
                 reader.close();
 
             }
             else{
-                Log.i("result",conn.getResponseCode() + "Error");
+                //Log.i("receiveMsg",conn.getResponseCode() + "Error");
+                Log.i("receiveMsg","비정상임 타임아웃 Error");
             }
         } catch (MalformedURLException e) {
+            Log.i("receiveMsg","연결안됨");
             e.printStackTrace();
         } catch (IOException e){
-        e.printStackTrace();
-    }
+            Log.i("receiveMsg","타임아웃"+rescode);
+            e.printStackTrace();
+        }
+        finally {
+            Log.i("receiveMsg","무조건 실행");
+        }
 
         return receiveMsg;
     }
+
+
 }

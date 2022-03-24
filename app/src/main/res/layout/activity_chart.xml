@@ -11,12 +11,20 @@
             android:id="@+id/chart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_marginTop="5dp"/>
+        <View
+            android:background="#808080"
+            android:layout_width="match_parent"
+            android:layout_height="2dp">
+
+        </View>
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_marginTop="5dp"/>
 
     </LinearLayout>
 
