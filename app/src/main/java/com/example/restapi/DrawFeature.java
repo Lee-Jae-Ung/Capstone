@@ -218,7 +218,6 @@ public class DrawFeature extends AppCompatActivity {
             this.device = device;
         }
 
-
         String resultText = "[NULL]";
 
         @RequiresApi(api = Build.VERSION_CODES.N)
