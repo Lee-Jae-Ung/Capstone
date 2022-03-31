@@ -9,12 +9,15 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -23,11 +26,15 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class DrawFeature extends AppCompatActivity {
@@ -37,8 +44,7 @@ public class DrawFeature extends AppCompatActivity {
     public LineChart chart;
     public LineChart chart4;
 
-    Handler mHandler = null;
-    Handler mHandler2 = null;
+
 
     int i=0;
 
@@ -46,6 +52,7 @@ public class DrawFeature extends AppCompatActivity {
     double peak = 0.0;
     boolean run = true;
     String ip;
+    String device;
     public static Thread thread2;
 
     @Override
@@ -59,9 +66,11 @@ public class DrawFeature extends AppCompatActivity {
 
         Intent intent = getIntent();
         ip = intent.getStringExtra("ip");
+        device = intent.getStringExtra("device");
 
-        mHandler = new Handler();
-        mHandler2 = new Handler();
+        Log.v("dfeature","ip : "+ip+"device : "+device);
+
+
         chart = (LineChart) findViewById(R.id.chart);
         chart4 = (LineChart) findViewById(R.id.chart4);
 
@@ -178,15 +187,22 @@ public class DrawFeature extends AppCompatActivity {
         chart4.invalidate();
 
 
+        //thread2 = new Thread(new getFeature(ip,device));
+        //thread2.start();
 
-        thread2 = new Thread(new getFeature());
-        thread2.start();
+        HandlerThread handlerThread = new HandlerThread("FEATURE");
+
+        handlerThread.start();
+
+        Handler statusHandler = new Handler(handlerThread.getLooper());
+
+        statusHandler.postDelayed(new getFeature(ip,device), 10);
 
     }
     @Override
     public void onBackPressed(){
         run = false;
-        thread2.interrupt();
+        //thread2.interrupt();
         super.onBackPressed();
 
     }
@@ -194,8 +210,12 @@ public class DrawFeature extends AppCompatActivity {
     private class getFeature implements Runnable {
         //private final AtomicBoolean condition = new AtomicBoolean(false);
 
-        public getFeature(){
+        private String ip;
+        private String device;
 
+        public getFeature(String ip, String device){
+            this.ip = ip;
+            this.device = device;
         }
 
 
@@ -206,14 +226,15 @@ public class DrawFeature extends AppCompatActivity {
         public void run() {
 
 
+
             //Log.v("thread","condition : "+condition);
             while(run) {
 
                 try {
                     Log.v("ipipip","feature : "+ip);
 
-                    Thread.sleep(50);
-                    resultText = new Task().execute("http://"+ip+":50010/manage/Status/feature").get();
+                    Thread.sleep(10);
+                    resultText = new Task().execute("http://"+ip+":50010/manage/Device/"+device).get();
                     Log.v("resultText",""+resultText);
                     JSONObject jsonObject = new JSONObject(resultText);
                     rms = Double.parseDouble(jsonObject.getString("RMS"));
@@ -228,7 +249,7 @@ public class DrawFeature extends AppCompatActivity {
 
                 Log.v("testdata1","zz");
 
-
+/*
                 if(peak>0.24){
 
                     NotificationManager notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -275,7 +296,7 @@ public class DrawFeature extends AppCompatActivity {
                     //알림매니저에게 알림(Notify) 요청
                     notificationManager.notify(1, notification);
                 }
-
+*/
                 //Ch1 = resultText.replace("Ch1", "").split(",");
                 //double[] nums;
                 //nums = Arrays.stream(Ch1).mapToDouble(Double::parseDouble).toArray();

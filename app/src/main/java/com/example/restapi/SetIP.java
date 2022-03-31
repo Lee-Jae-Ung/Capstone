@@ -28,9 +28,11 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
     Button btn_Insert;
     Button btn_Select;
     Button btn_delete;
+    EditText edit_section;
     EditText edit_device;
     EditText edit_location;
     EditText edit_Ip;
+    TextView text_section;
     TextView text_device;
     TextView text_location;
     TextView text_Ip;
@@ -39,6 +41,7 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
     CheckBox check_Ip;
 
     long nowIndex;
+    String Section;
     String DeviceName;
     String Location;
     String Ip;
@@ -67,12 +70,16 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
         btn_delete = (Button) findViewById(R.id.btn_delete);
         btn_delete.setOnClickListener(this);
 
+        edit_section = (EditText) findViewById(R.id.edit_section);
         edit_device = (EditText) findViewById(R.id.edit_device);
         edit_location = (EditText) findViewById(R.id.edit_location);
         edit_Ip = (EditText) findViewById(R.id.edit_Ip);
+
+        text_section = (TextView)findViewById(R.id.text_section);
         text_device = (TextView) findViewById(R.id.text_device);
         text_location = (TextView) findViewById(R.id.text_location);
         text_Ip = (TextView) findViewById(R.id.text_Ip);
+
         check_DeviceName = (CheckBox) findViewById(R.id.check_devicename);
         check_DeviceName.setOnClickListener(this);
         check_Location = (CheckBox) findViewById(R.id.check_location);
@@ -99,6 +106,7 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void setInsertMode(){
+        edit_section.setText("");
         edit_device.setText("");
         edit_location.setText("");
         edit_Ip.setText("");
@@ -116,9 +124,10 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
             Log.e("On Click", "Data: " + arrayData.get(position));
             String[] tempData = arrayData.get(position).split("\\s+");
             Log.e("On Click", "Split Result = " + tempData);
-            edit_device.setText(tempData[0].trim());
-            edit_location.setText(tempData[1].trim());
-            edit_Ip.setText(tempData[2].trim());
+            edit_section.setText(tempData[0].trim());
+            edit_device.setText(tempData[1].trim());
+            edit_location.setText(tempData[2].trim());
+            edit_Ip.setText(tempData[3].trim());
 
             btn_Insert.setEnabled(false);
             btn_Update.setEnabled(true);
@@ -165,6 +174,8 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
         arrayIndex.clear();
         while(iCursor.moveToNext()){
             @SuppressLint("Range") String tempIndex = iCursor.getString(iCursor.getColumnIndex("_id"));
+            @SuppressLint("Range") String tempSection = iCursor.getString(iCursor.getColumnIndex("section"));
+            tempSection = setTextLength(tempSection,10);
             @SuppressLint("Range") String tempDevice = iCursor.getString(iCursor.getColumnIndex("devicename"));
             tempDevice = setTextLength(tempDevice,10);
             @SuppressLint("Range") String tempLocation = iCursor.getString(iCursor.getColumnIndex("location"));
@@ -173,7 +184,7 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
             tempIp = setTextLength(tempIp,10);
 
 
-            String Result = tempDevice + tempLocation + tempIp;
+            String Result = tempSection + tempDevice + tempLocation + tempIp;
             arrayData.add(Result);
             arrayIndex.add(tempIndex);
         }
@@ -197,11 +208,12 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_insert:
+                Section = edit_section.getText().toString();
                 DeviceName = edit_device.getText().toString();
                 Location = edit_location.getText().toString();
                 Ip = edit_Ip.getText().toString();
 
-                if(DeviceName.equals("")||Location.equals("")||Ip.equals("")) {
+                if(Section.equals("")|| DeviceName.equals("")||Location.equals("")||Ip.equals("")) {
                     Toast.makeText(SetIP.this,"값을 입력하시오",Toast.LENGTH_SHORT);
                     Log.v("insert","실패");
                 }
@@ -209,31 +221,26 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
 
 
                     mDbOpenHelper.open();
-                    mDbOpenHelper.insertColumn(DeviceName, Location, Ip);
+                    mDbOpenHelper.insertColumn(Section,DeviceName, Location, Ip);
                     showDatabase(sort);
                     setInsertMode();
                     Log.v("dbtest",""+mDbOpenHelper);
-                    edit_device.requestFocus();
-                    edit_device.setCursorVisible(true);
-                    Intent intent1 = ((MainActivity)MainActivity.mContext).getIntent();
-                    ((MainActivity)MainActivity.mContext).finish(); //현재 액티비티 종료 실시
-                    ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0); //효과 없애기
-                    ((MainActivity)MainActivity.mContext).startActivity(intent1); //현재 액티비티 재실행 실시
-                    ((MainActivity)MainActivity.mContext).overridePendingTransition(0, 0);
-                }
+                    edit_section.requestFocus();
+                    edit_section.setCursorVisible(true);
+                    }
 
 
                 break;
 
             case R.id.btn_update:
-
+                Section = edit_section.getText().toString();
                 DeviceName = edit_device.getText().toString();
                 Location = edit_location.getText().toString();
                 Ip = edit_Ip.getText().toString();
 
 
 
-                mDbOpenHelper.updateColumn(nowIndex,DeviceName, Location, Ip);
+                mDbOpenHelper.updateColumn(nowIndex,Section,DeviceName, Location, Ip);
                 showDatabase(sort);
                 setInsertMode();
                 edit_device.requestFocus();
@@ -247,7 +254,7 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
                 break;
 
             case R.id.btn_delete:
-                DeviceName = edit_device.getText().toString();
+                Section = edit_section.getText().toString();
                 Location = edit_location.getText().toString();
                 Ip = edit_Ip.getText().toString();
                 mDbOpenHelper.deleteColumn(nowIndex);
@@ -286,7 +293,7 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
         }
 
     }
-    public boolean loadItemsFromDB(ArrayList<MainListBtn> list,String devname,String location, String ip) {
+    public boolean loadItemsFromDB(ArrayList<MainListBtn> list,String section,String devname,String location, String ip) {
         MainListBtn item ;
         int i ;
 
@@ -299,9 +306,11 @@ public class SetIP extends AppCompatActivity implements View.OnClickListener {
 
         // 아이템 생성.
         item = new MainListBtn() ;
-        item.setText1(devname) ;
-        item.setText2(location) ;
-        item.setText3(ip) ;
+        item.setText1(section) ;
+        item.setText2(devname) ;
+        item.setText3(location) ;
+        item.setText4(ip) ;
+
         list.add(item) ;
         i++ ;
 

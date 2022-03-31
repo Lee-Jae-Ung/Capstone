@@ -56,8 +56,9 @@ public class DbOpenHelper {
     }
 
     // Insert DB
-    public long insertColumn(String devicename, String location, String ip){
+    public long insertColumn(String section,String devicename, String location, String ip){
         ContentValues values = new ContentValues();
+        values.put(DataBases.CreateDB.SECTION, section);
         values.put(DataBases.CreateDB.DEVICENAME, devicename);
         values.put(DataBases.CreateDB.LOCATION, location);
         values.put(DataBases.CreateDB.IP, ip);
@@ -66,8 +67,9 @@ public class DbOpenHelper {
 
 
     // Update DB
-    public boolean updateColumn(long id, String devicename, String location, String ip){
+    public boolean updateColumn(long id, String section,String devicename, String location, String ip){
         ContentValues values = new ContentValues();
+        values.put(DataBases.CreateDB.SECTION, section);
         values.put(DataBases.CreateDB.DEVICENAME, devicename);
         values.put(DataBases.CreateDB.LOCATION, location);
         values.put(DataBases.CreateDB.IP, ip);
@@ -95,4 +97,16 @@ public class DbOpenHelper {
         Cursor c = mDB.rawQuery( "SELECT * FROM device_list ORDER BY " + sort + ";", null);
         return c;
     }
+
+    public Cursor sortColumnDist(){
+        Cursor c = mDB.rawQuery( "SELECT DISTINCT section, location ,ip FROM device_list ORDER BY section;", null);
+        return c;
+    }
+
+    public Cursor selectDevice(String section_str){
+        Cursor c = mDB.rawQuery( "SELECT devicename FROM device_list WHERE section =" + section_str + ";", null);
+        return c;
+    }
+
+
 }

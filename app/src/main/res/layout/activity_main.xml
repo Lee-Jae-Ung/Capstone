@@ -6,10 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+
         <ScrollView
             android:id="@+id/scroll2_view"
             android:layout_width="match_parent"
@@ -18,75 +21,11 @@
             android:fillViewport="true"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp">
-
-            <ListView
-                android:id="@+id/device_list_view"
+            <ExpandableListView
+                android:id="@+id/expandable_list"
                 android:layout_width="match_parent"
-                android:dividerHeight="2dp"
-                android:divider="#CFD8DC"
-                android:layout_height="match_parent">
-
-            </ListView>
+                android:layout_height="wrap_content"
+                android:divider="#000000"/>
         </ScrollView>
     </LinearLayout>
-
-
-
-
-    <!--
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DEVICE1"
-            >
-        </TextView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="울산시 남구 대학로"
-            >
-        </TextView>
-
-
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="Status"
-            />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="feature"
-            />
-    </LinearLayout>
-!-->
-
-
-<!--
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
-!-->
-
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

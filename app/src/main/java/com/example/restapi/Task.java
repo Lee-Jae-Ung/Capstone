@@ -1,9 +1,14 @@
 package com.example.restapi;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import java.io.BufferedReader;
@@ -18,9 +23,11 @@ public class Task extends AsyncTask<String, Void, String> {
     private String str, receiveMsg;
     int rescode;
 
+    Handler handler = new Handler();
     @Override
     protected String doInBackground(String... strings) {
         URL url = null;
+
 
         try{
             url = new URL(strings[0]);
@@ -53,8 +60,15 @@ public class Task extends AsyncTask<String, Void, String> {
             Log.i("receiveMsg","연결안됨");
             e.printStackTrace();
         } catch (IOException e){
-            Log.i("receiveMsg","타임아웃"+rescode);
+            Log.i("receiveMsg","타임아웃 예외발생");
             e.printStackTrace();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i("receiveMsg","타임아웃 핸들러 실행");
+
+                }
+            });
         }
         finally {
             Log.i("receiveMsg","무조건 실행");
@@ -62,6 +76,7 @@ public class Task extends AsyncTask<String, Void, String> {
 
         return receiveMsg;
     }
+
 
 
 }

@@ -6,6 +6,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,11 +22,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -50,6 +55,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -69,13 +76,19 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     //double peak = 0.0;
     public static Context mContext;
 
-    ListView listview ;
-    MainListBtnAdapter adapter;
-    ArrayList<MainListBtn> items = new ArrayList<MainListBtn>() ;
-    //public static Context context_main;
+    int count=0;
     DbOpenHelper mDbOpenHelper;
+    ArrayList<MainListBtn> items = new ArrayList<MainListBtn>() ;
+
 
     SwipeRefreshLayout swipeRefreshLayout;
+
+    ExpandableListView listView;
+    MainListBtnAdapter adapter;
+    ArrayList<ParentItem> groupList = new ArrayList<>(); //부모 리스트
+    ArrayList<ArrayList<ChildItem>> childList = new ArrayList<>(); //자식 리스트
+    ArrayList<ArrayList<ChildItem>> monthArray = new ArrayList<>(); //1월 ~ 12월을 관리하기 위한 리스트
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,58 +99,118 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         swipeRefreshLayout = findViewById(R.id.swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
-        //mHandler = new Handler();
-        //mHandler2 = new Handler();
-        //chart = (LineChart) findViewById(R.id.chart);
-        //chart4 = (LineChart) findViewById(R.id.chart4);
-        //pieChart = (PieChart)findViewById(R.id.chart2);
-        //pieChart2 = (PieChart)findViewById(R.id.chart3);
+        listView = (ExpandableListView) findViewById(R.id.expandable_list);
 
-        //Button button1 = findViewById(R.id.button1);
-        //Button button2 = findViewById(R.id.button2);
-        //Button button3 = findViewById(R.id.control);
-        //Thread thread2 = new Thread(new );
-        //thread2.start();
-
-
-        //Log.v("dbtest",""+mDbOpenHelper.selectColumns());
-
-
-
-        //ListView listview ;
-        //ainListBtnAdapter adapter;
-        //ArrayList<MainListBtn> items = new ArrayList<MainListBtn>() ;
 
         mDbOpenHelper = new DbOpenHelper(this);
         mDbOpenHelper.open();
         mDbOpenHelper.create();
-        Cursor iCursor = mDbOpenHelper.selectColumns();
-        String Result = null;
+        Cursor iCursor = mDbOpenHelper.sortColumnDist();
+
+
+        while (iCursor.moveToNext()) {
+
+            monthArray.add(new ArrayList<>());
+            //groupList.add(new ParentItem(tempSec + "구간", tempLoc,tempIp,childList.get(Integer.parseInt(tempSec)-1).size() + "개"));
+            Log.v("arrrray",""+(count++));
+        }
+
+
+
+
+        //어댑터에 각각의 배열 등록
+        adapter = new MainListBtnAdapter();
+        adapter.parentItems = groupList;
+        adapter.childItems = childList;
+
+
+        listView.setAdapter(adapter);
+        listView.setGroupIndicator(null); //리스트뷰 기본 아이콘 표시 여부
+        setListItems();
+        setChild();
+        //initial();
+
+        //setListItems();
+
+        //리스트 클릭시 지출 항목이 토스트로 나타난다
+
+    }
+
+    public void setChild(){
+
+
+        for(int i=1;i<=count;i++) {
+            mDbOpenHelper = new DbOpenHelper(this);
+            mDbOpenHelper.open();
+            mDbOpenHelper.create();
+            Cursor iCursor = mDbOpenHelper.selectDevice(Integer.toString(i));
+            while (iCursor.moveToNext()) {
+
+                @SuppressLint("Range") String tempDev = iCursor.getString(iCursor.getColumnIndex("devicename"));
+                ChildItem item = new ChildItem(tempDev);
+                monthArray.get(i - 1).add(item);
+
+            }
+        }
+        Log.v("arrrray","setlist 진입");
+
+        count=0;
+        setListItems();
+
+    }
+    //리스트 초기화 함수
+    public void setListItems() {
+        groupList.clear();
+        childList.clear();
+
+        childList.addAll(monthArray);
+
+        mDbOpenHelper = new DbOpenHelper(this);
+        mDbOpenHelper.open();
+        mDbOpenHelper.create();
+        Cursor iCursor = mDbOpenHelper.sortColumnDist();
+
+        Log.v("arrrray","setlist 진입");
+        while (iCursor.moveToNext()) {
+
+            @SuppressLint("Range") String tempSec = iCursor.getString(iCursor.getColumnIndex("section"));
+            @SuppressLint("Range") String tempLoc = iCursor.getString(iCursor.getColumnIndex("location"));
+            @SuppressLint("Range") String tempIp = iCursor.getString(iCursor.getColumnIndex("ip"));
+
+
+            groupList.add(new ParentItem(tempSec + "구간", tempLoc,tempIp,childList.get(Integer.parseInt(tempSec)-1).size() + "개"));
+            Log.v("arrrray",tempSec);
+        }
+
+
+/*
         while (iCursor.moveToNext()) {
 
             @SuppressLint("Range") String tempId = iCursor.getString(iCursor.getColumnIndex("_id"));
             @SuppressLint("Range") String tempDev = iCursor.getString(iCursor.getColumnIndex("devicename"));
+            @SuppressLint("Range") String tempSec = iCursor.getString(iCursor.getColumnIndex("section"));
             @SuppressLint("Range") String tempLoc = iCursor.getString(iCursor.getColumnIndex("location"));
             @SuppressLint("Range") String tempIp = iCursor.getString(iCursor.getColumnIndex("ip"));
-            loadItemsFromDB(items,tempDev,tempLoc,tempIp);
+
+
+
+
+            //groupList.add(new ParentItem(tempSec + "구간", tempLoc,tempIp,childList.get(Integer.parseInt(tempSec)-1).size() + "개"));
+            Log.v("arrrray",tempSec);
         }
-        // items 로드.
-
-        //loadItemsFromDB(items,"abd","ulsans","203.250.77.241");
-        // Adapter 생성
-        adapter = new MainListBtnAdapter(MainActivity.this, R.layout.activity_control, items) ;
-
-        // 리스트뷰 참조 및 Adapter달기
-        listview = (ListView) findViewById(R.id.device_list_view);
-        listview.setAdapter(adapter);
+*/
 
 
 
-        //Log.v("test", "" + Result);
 
 
+
+
+        //부모 리스트 내용 추가
+
+
+        adapter.notifyDataSetChanged();
     }
-
     @Override
     public void onRefresh(){
         updateLayoutView();
@@ -145,7 +218,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         swipeRefreshLayout.setRefreshing(false);
     }
     public void updateLayoutView(){
-
+        Intent intent = getIntent();
+        finish(); //현재 액티비티 종료 실시
+        overridePendingTransition(0, 0); //인텐트 애니메이션 없애기
+        startActivity(intent); //현재 액티비티 재실행 실시
+        overridePendingTransition(0, 0);
     }
 
 
@@ -534,7 +611,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
 
-    public boolean loadItemsFromDB(ArrayList<MainListBtn> list,String devname,String location, String ip) {
+    public boolean loadItemsFromDB(ArrayList<MainListBtn> list,String Section,String Device,String location, String ip) {
         MainListBtn item ;
         int i ;
 
@@ -548,9 +625,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         item = new MainListBtn() ;
 
-        item.setText1(devname) ;
-        item.setText2(location) ;
-        item.setText3(ip) ;
+
+        item.setText1(Section) ;
+        item.setText2(Device) ;
+        item.setText3(location); ;
+        item.setText4(ip) ;
+
 
 
 
